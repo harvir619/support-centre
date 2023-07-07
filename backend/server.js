@@ -8,4 +8,7 @@ app.get('/', (req, res) => {
     res.status(200).json({message:'Welcome to the support centre API '})
 })
 
+//Routes
+app.use('/api/users',require('./routes/userRoutes'))
+
 app.listen(PORT,()=>console.log('server running on port',PORT))
