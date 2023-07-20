@@ -4,6 +4,7 @@ import { FaUser } from 'react-icons/fa'
 import { toast } from 'react-toastify'
 import {useSelector,useDispatch} from 'react-redux'
 import {register,reset} from '../features/auth/authSlice'
+import Spinner from '../components/Spinner'
 
 function Register() {
   const [form,setFormData]=useState({
@@ -54,6 +55,10 @@ function Register() {
     }
   }
   
+  if (isLoading) {
+    return <Spinner/>
+  }
+  
   return (
     <>
       <section className='heading'>
@@ -66,14 +71,14 @@ function Register() {
       <section className="form">
         <form onSubmit={onSubmit}>
           <div className="form-group">
-            <input type="text" className="form-control" id='name' value={name} onChange={onChange} placeholder='Enter your name' required />
+            <input type="text" className="form-control" id='name' value={name} onChange={onChange} placeholder='Enter your name' autoComplete="" required />
           </div>
           <div className="form-group">
-            <input type="email" className="form-control" id='email' value={email} onChange={onChange} placeholder='Enter your email' required />
+            <input type="email" className="form-control" id='email' value={email} onChange={onChange} placeholder='Enter your email' autoComplete="" required />
           </div>
           <div className="form-group">
-            <input type="password" className="form-control" id='password' value={password} onChange={onChange} placeholder='Enter your pasword' required />
-            <input type="password" className="form-control" id='password2' value={password2} onChange={onChange} placeholder='Confirm password'  required />
+            <input type="password" className="form-control" id='password' value={password} onChange={onChange} placeholder='Enter your pasword' autoComplete="" required />
+            <input type="password" className="form-control" id='password2' value={password2} onChange={onChange} placeholder='Confirm password' autoComplete=""  required />
           </div>      
           <div className="form-group">
           <button className="btn btn-block">Register</button>
