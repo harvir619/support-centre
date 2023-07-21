@@ -10,25 +10,44 @@ const User = require('../models/userModel')
 //@access Private
 const getTickets = asyncHandler(async(req,res) => {
     
-    const tickets = Ticket.find({})
+    //get user using the id in the JWT
+    const user = await User.findById(req.user.id)
+    
+    if (!user) { 
+        res.status(401)
+        throw new Error('User not found')   
+    }
     
     
-    res.status(200).json({message:'getTickets'})
+    const tickets = await Ticket.find({user:req.user.id})
+    
+    
+   return res.status(200).json(tickets)
 })
 
 //@des Create a new ticket
 //@route POST /api/tickets
 //@access Private
 const createTicket = asyncHandler(async (req, res) => {
-    const { user, product, description, status } = req.body
+    const { product, description} = req.body
     
         //Validation
-    if (!user, !product, !description, !status) {
+    if (!product, !description) {
         res.status(400)
         throw new Error('Please add all fields')
     }
     
-    const ticket = await Ticket.create({ user, product, description, status })
+    //Get user using the id in the JWT
+    const user = await User.findById(req.user.id)
+    
+    if (!user) {
+        res.status(401)
+        throw new Error('User not found')
+    }
+    
+    const ticket = await Ticket.create({
+        user: req.user.id, product, description, status:'new'
+    })
     
     if (ticket) {
         res.status(201).json(ticket)
