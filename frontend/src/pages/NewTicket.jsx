@@ -1,19 +1,20 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { createTicket } from "../features/ticket/ticketSlice"
-
+import { createTicket,reset } from "../features/ticket/ticketSlice"
+import { useNavigate } from "react-router-dom"
+import { toast } from 'react-toastify'
+import Spinner from "../components/Spinner"
+import BackButton from "../components/BackButton"
 function NewTicket() {
     const { user } = useSelector((state) => state.auth)
+    const {isLoading,isError,isSuccess,message} = useSelector((state)=>state.ticket)
     const [name] = useState(user.name)
     const [email] = useState(user.email)
     
-    const [ formData, setFormData ] = useState({
-        product: 'iPhone',
-        description: ''
-    })
+    const [ formData, setFormData ] = useState({ product: 'iPhone', description: ''})
     const { product, description } = formData
     const dispatch = useDispatch()
-    
+    const navigate = useNavigate()
     const onChange = (e) => {
         setFormData((prevState) => (
             {
@@ -22,18 +23,37 @@ function NewTicket() {
             }
         ))
     }
+    
+    useEffect(() => {
+        if (isError) {
+            toast.error(message)
+        }
+        if (isSuccess) {
+            toast.success('Ticket Created')
+            dispatch(reset())
+            navigate('/tickets')
+        }
+        
+        dispatch(reset())
+        
+     },[isError,isSuccess,message,navigate,dispatch])
+    
     const onSubmit = (e) => { 
         e.preventDefault()
         
-        const ticketData = {
-            product,
-            description
-        }
+        const ticketData = { product, description }
         
         dispatch(createTicket(ticketData))
+        dispatch(reset())
     }
+    
+    if (isLoading) {
+        return <Spinner/>
+    }
+    
   return (
       <>
+          <BackButton url = '/'/>
           <section className="heading">
               <h1>Create New Ticket</h1>
               <p>Please fill out the form below</p>  
