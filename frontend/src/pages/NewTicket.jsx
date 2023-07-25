@@ -73,7 +73,7 @@ function NewTicket() {
                   <label htmlFor="product">Product</label>
                   <select name="product" id="product" value={product} onChange={onChange}>
                       <option value="iPhone">iPhone</option>
-                      <option value="MacbookPro">Macbook Pro</option>
+                      <option value="Macbook Pro">Macbook Pro</option>
                       <option value="iMac">iMac</option>
                       <option value="iPad">iPad</option>
                   </select>
