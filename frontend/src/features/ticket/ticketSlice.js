@@ -50,6 +50,24 @@ export const fetchTickets = createAsyncThunk(
     }
 )
 
+//Fetch Single Ticket
+export const fetchSingleTicket = createAsyncThunk(
+    'tickets/fetchSingle',
+    async (ticketId, thunkAPI) => {
+        try {
+            const token = thunkAPI.getState().auth.user.token
+            return await ticketService.fetchSingleTicket(ticketId,token)
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString()
+            return thunkAPI.rejectWithValue(message)
+        }
+    }
+)
 export const ticketSlice = createSlice({
     name: 'ticket',
     initialState,
@@ -58,6 +76,7 @@ export const ticketSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            //Create Ticket
             .addCase(createTicket.pending, (state) => {
                 state.isLoading = true
             })
@@ -70,6 +89,7 @@ export const ticketSlice = createSlice({
                 state.isError = true
                 state.message = action.payload
             })
+            // Fetch All Tickets of the User
             .addCase(fetchTickets.pending, (state) => {
                 state.isLoading = true
             })
@@ -79,6 +99,20 @@ export const ticketSlice = createSlice({
                 state.tickets = action.payload
             })
             .addCase(fetchTickets.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message= action.payload
+            })
+            //Fetch a Single Ticket
+            .addCase(fetchSingleTicket.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(fetchSingleTicket.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isSuccess = true
+                state.ticket = action.payload
+            })
+            .addCase(fetchSingleTicket.rejected, (state, action) => {
                 state.isLoading = false
                 state.isError = true
                 state.message= action.payload

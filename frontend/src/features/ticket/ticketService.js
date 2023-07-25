@@ -24,6 +24,17 @@ const fetchTickets = async (token) => {
     return response.data
 }
 
-const ticketService = {createTicket,fetchTickets}
+//Fetch a Single Ticket
+const fetchSingleTicket = async (ticketId, token) => {
+    const config = {
+        headers: {
+            Authorization:`Bearer ${token}`
+        }
+    }
+    const response = await axios.get(API_URL + `/${ticketId}`,config)    
+    return response.data
+}
+
+const ticketService = {createTicket,fetchTickets,fetchSingleTicket}
 
 export default ticketService
