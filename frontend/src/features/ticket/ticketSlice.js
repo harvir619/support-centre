@@ -139,19 +139,11 @@ export const ticketSlice = createSlice({
                 state.message= action.payload
             })
         //Close a Single Ticket
-            .addCase(closeTicket.pending, (state) => {
-                state.isLoading = true
-            })
             .addCase(closeTicket.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.isSuccess = true
-                state.ticket = action.payload
+                state.ticket  = action.payload
             })
-            .addCase(closeTicket.rejected, (state, action) => {
-                state.isLoading = false
-                state.isError = true
-                state.message= action.payload
-            })        
     }
 })
 
