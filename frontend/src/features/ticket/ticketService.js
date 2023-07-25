@@ -35,6 +35,18 @@ const fetchSingleTicket = async (ticketId, token) => {
     return response.data
 }
 
-const ticketService = {createTicket,fetchTickets,fetchSingleTicket}
+//Close a Ticket
+const closeTicket = async (ticketId, token) => {
+    const config = {
+        headers: {
+            Authorization:`Bearer ${token}`
+        }
+    }
+    const response = await axios.put(API_URL + `/${ticketId}`,{status:'closed'},config)    
+    return response.data
+
+}
+
+const ticketService = {createTicket,fetchTickets,fetchSingleTicket,closeTicket}
 
 export default ticketService

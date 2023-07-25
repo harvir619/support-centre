@@ -68,6 +68,27 @@ export const fetchSingleTicket = createAsyncThunk(
         }
     }
 )
+
+//Close Ticket
+export const closeTicket = createAsyncThunk(
+    'tickets/close',
+    async (ticketId, thunkAPI) => { 
+        try {
+            const token = thunkAPI.getState().auth.user.token
+            return await ticketService.closeTicket(ticketId,token)
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString()
+            return thunkAPI.rejectWithValue(message)            
+        }
+    }
+)
+
+
 export const ticketSlice = createSlice({
     name: 'ticket',
     initialState,
@@ -76,7 +97,7 @@ export const ticketSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            //Create Ticket
+        //Create Ticket
             .addCase(createTicket.pending, (state) => {
                 state.isLoading = true
             })
@@ -89,7 +110,7 @@ export const ticketSlice = createSlice({
                 state.isError = true
                 state.message = action.payload
             })
-            // Fetch All Tickets of the User
+        // Fetch All Tickets of the User
             .addCase(fetchTickets.pending, (state) => {
                 state.isLoading = true
             })
@@ -103,7 +124,7 @@ export const ticketSlice = createSlice({
                 state.isError = true
                 state.message= action.payload
             })
-            //Fetch a Single Ticket
+        //Fetch a Single Ticket
             .addCase(fetchSingleTicket.pending, (state) => {
                 state.isLoading = true
             })
@@ -117,6 +138,20 @@ export const ticketSlice = createSlice({
                 state.isError = true
                 state.message= action.payload
             })
+        //Close a Single Ticket
+            .addCase(closeTicket.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(closeTicket.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isSuccess = true
+                state.ticket = action.payload
+            })
+            .addCase(closeTicket.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message= action.payload
+            })        
     }
 })
 
