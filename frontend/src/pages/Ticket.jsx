@@ -1,14 +1,17 @@
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { fetchSingleTicket,reset,closeTicket } from "../features/ticket/ticketSlice"
+import { fetchSingleTicket, closeTicket } from "../features/ticket/ticketSlice"
+import { fetchNote,createNote,reset } from "../features/note/noteSlice"
 import { useNavigate, useParams } from "react-router-dom"
 import BackButton from "../components/BackButton"
 import Spinner from "../components/Spinner"
 import { toast } from "react-toastify"
+import NoteItem from "../components/NoteItem"
 
 
 function Ticket() {
-    const {ticket,isSuccess,isError,isLoading,message}= useSelector((state)=>state.ticket)
+    const { ticket, isSuccess, isError, isLoading, message } = useSelector((state) => state.ticket)
+    const {note,isLoading:isNotesLoading,isError:isNotesError,message:notesMessage} = useSelector((state) => state.note)
     const dispatch = useDispatch()
     const {id} = useParams()
     const navigate = useNavigate()
@@ -17,6 +20,7 @@ function Ticket() {
             toast.error(message)
         }
         dispatch(fetchSingleTicket(id))
+        dispatch(fetchNote(id))
         // eslint-disable-next-line
     }, [id, isError, message])
     
@@ -26,11 +30,11 @@ function Ticket() {
         navigate('/tickets')
     }
     
-    if (isLoading) {
+    if (isLoading || isNotesLoading) {
         return <Spinner/>
     } 
     
-    if (isError) {
+    if (isError||isNotesError) {
         return <h3>Something Went Wrong</h3>
     }
     return (
@@ -49,7 +53,11 @@ function Ticket() {
                     <h3>Description of Issue</h3>
                     <p>{ticket.description}</p>
                 </div>
+                <h2>Notes</h2>
             </header>
+            {note.map((note) => (
+                <NoteItem key={note._id} note={note} />
+            ))}
             {ticket.status !== 'closed' && (
                 <button className="btn btn-block btn-danger"
                     onClick={onTicketClose}>Close Ticket</button>
