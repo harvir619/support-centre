@@ -56,7 +56,7 @@ function Ticket() {
     //Note Submit
     const onNoteSubmit = (e) => {
         e.preventDefault()
-        dispatch(createNote({noteText, ticketId: ticket._id}))
+        dispatch(createNote({noteText,id}))
         closeModal()
     }
     if (isLoading || isNotesLoading) {

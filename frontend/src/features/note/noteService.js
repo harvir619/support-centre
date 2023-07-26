@@ -4,24 +4,25 @@ const API_URL = '/api/tickets/'
 
 
 //Create Note
-const createNote = async (noteData, token) => {
+const createNote = async (noteData, id, token) => {
     const config = {
         headers: {
             Authorization: `Bearer ${token}`
         }
+        
     }
-    const response = await axios.post(API_URL +noteData.ticket._id+'/notes', noteData, config)
+    const response = await axios.post(API_URL +id+'/notes', {'text':noteData}, config)
     return response.data
 }
 
 //Fetch Notes
-const fetchNote = async (ticket,token) => {
+const fetchNote = async (id,token) => {
     const config = {
         headers: {
             Authorization: `Bearer ${token}`
         }
     }
-    const response = await axios.get(API_URL +ticket+'/notes', config)
+    const response = await axios.get(API_URL +id+'/notes', config)
     return response.data
 }
 
